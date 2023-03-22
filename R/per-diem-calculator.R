@@ -4,19 +4,23 @@
 library(tidyverse)
 library(lubridate)
 library(shiny)
-
+as.numeric(str_extract(days(ymd("2023-01-01") - ymd("2023-01-05")), "^\\d+"))
+ymd("2023-01-01") > ymd("2023-01-05")
 
 calculate_per_diems <- function(depart_time, return_time, start_date, end_date) {
   
-  # Get the number of travel days (minus first and last)
-  ndays <- as.numeric(str_extract(days(end_date - start_date), "^\\d+")) - 1
-  if (ndays <= 0) {
-    print("Return date must be after departing date")
+
+  if (end_date < start_date) {
+    stop("Return date must be after departing date")
+  } else {
+    # Get the number of travel days (minus first and last)
+    ndays <- as.numeric(str_extract(days(end_date - start_date), "^\\d+")) - 1
+    
+    middle_day_breakfast <- rep(TRUE, ndays)
+    middle_day_lunch <- rep(TRUE, ndays)
+    middle_day_dinner <- rep(TRUE, ndays)
   }
-  middle_day_breakfast <- rep(TRUE, ndays)
-  middle_day_lunch <- rep(TRUE, ndays)
-  middle_day_dinner <- rep(TRUE, ndays)
-  
+
   first_day_breakfast <- switch(
     depart_time,
     "Before breakfast" = TRUE,
